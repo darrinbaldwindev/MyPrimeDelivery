@@ -36,3 +36,17 @@ No product purpose, market, content model, affiliate-program relationship, or im
 **Closure evidence:** Exact empty-repository evidence; four alternatives; scope/authority/data boundary required for each; no affiliate/account claim.
 
 **Immediate successor:** On closure and owner selection, issue **M-02**: review the selected charter and create a bounded non-production evidence checklist.
+
+## Wave 1 task closure — M-01 — 2026-08-26T13:58:32+10:00
+
+**Author/platform:** Manus Overseer. **Scope:** Read-only metadata review of [`Amazon-Affiliate`](https://github.com/darrinbaldwindev/Amazon-Affiliate), default branch `agent/overseer/initial-project-timeline`, with no product source, open PR, or open issue evidence. No account, API, product-data, affiliate, website, automation, deployment, or external-service action was taken.
+
+**Result:** **M-01 CLOSED — project-charter decision frame prepared.** The evidence supports four mutually exclusive owner choices: (1) retain as an intentional placeholder; (2) approve an active project charter; (3) archive/redirect to a different canonical project; or (4) retire it. The name alone is not evidence of affiliate eligibility, program status, credentials, permitted data use, or implementation scope.
+
+**Owner decision required:** Choose one option and, if active, provide the smallest non-production charter naming objective, market, owner, content/data boundary, lawful/provider-compliant posture, canonical source, backlog, and acceptance evidence.
+
+### Active successor — M-02
+
+**Task M-02:** On owner selection, review the chosen charter and create only its bounded non-production evidence checklist. Until then, do not invent scope or search/access affiliate services.
+
+**Status:** M-01 closed; M-02 active and blocked on owner project-classification decision.
