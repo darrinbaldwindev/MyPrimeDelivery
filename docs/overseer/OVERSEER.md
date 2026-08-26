@@ -26,3 +26,13 @@ No product purpose, market, content model, affiliate-program relationship, or im
 **Confidence:** High for the empty-repository state; no product maturity can be assessed.
 
 > This is a governance timeline, not evidence of affiliate eligibility, legal compliance, API permission, revenue, website, or production readiness.
+
+## Active task assignment — Wave 1 (M-01) — 2026-08-26T13:50:47+10:00
+
+**Authority and scope:** Darrin’s continuous-task-chain instruction. This is a read-only project-definition task; it does not authorize affiliate-account use, API access, product-data intake, link publication, automation, deployment, or changes outside this log.
+
+**Task M-01:** Prepare a one-page decision frame from the empty-repository state: intentional placeholder, active charter, archive/redirect, or retirement.
+
+**Closure evidence:** Exact empty-repository evidence; four alternatives; scope/authority/data boundary required for each; no affiliate/account claim.
+
+**Immediate successor:** On closure and owner selection, issue **M-02**: review the selected charter and create a bounded non-production evidence checklist.
