@@ -2,51 +2,46 @@
 
 ## Repository
 
-`darrinbaldwindev/Amazon-Affiliate`
+`darrinbaldwindev/MyPrimeDelivery`
 
-## Purpose
+## Reconciliation — 2026-08-31
 
-No product purpose, market, content model, affiliate-program relationship, or implementation scope is verified in the repository. The repository name alone is not evidence of an affiliate account, approved programme, Amazon API capability, website, product catalogue, pricing right, or external integration.
+The portfolio registry identifies this repository as the **MyPrimeDelivery — Delivery project**, P2 / adaptive. The repository itself currently contains governance documentation rather than a verified application implementation.
 
-## Timeline and current milestone — 2026-08-26T11:02:51+10:00
+The earlier Amazon-Affiliate framing is retained below as historical evidence. It is **not** treated as the current project charter because it conflicts with the current portfolio identity.
 
-| Timeline point | Verified observation | Status |
-|---|---|---|
-| 23 Aug | The repository was created with default branch `main`. | Repository created. |
-| Current | `main` has no commit, tracked content, branch history, open pull request, open issue, release, source, test, workflow, or configuration evidence. | No implementation baseline. |
+## Historical baseline — 2026-08-26
 
-**Current milestone:** Darrin classifies the repository as an intentional placeholder, an active project with an approved charter, an archive/redirect candidate, or a retirement candidate. If active, the first milestone is a non-production project contract that names the objective, target market, content/data model, owner, compliance boundary, source-of-truth, backlog, and acceptance evidence.
+No product purpose, market, content model, affiliate-program relationship, or implementation scope was verified in the repository at that time. The historical log therefore required an owner classification before implementation.
 
-**Held blockers:** No business objective, product scope, canonical website/application repository, affiliate-program status, permitted data/API boundary, owner, backlog, validation plan, or release criteria is recorded.
+## Historical Wave 1 — M-01
 
-**Owner decision:** Darrin must approve the project charter and any external-service/access boundary before affiliate account use, API access, product-data intake, link publication, automation, deployment, or release is considered. This log does not authorize any of those actions.
+**Status:** CLOSED.
 
-**Next Overseer instruction:** Maintain this log append-only. On a material purpose decision, branch, source, issue, PR, policy, integration evidence, validation result, or owner decision, record date, exact revision/artifact, verified fact versus claim, milestone status, blocker, owner decision, and reassessment condition. Do not alter paths other than this log or activate external services without separate authority.
+A decision frame was prepared for the then-assumed Amazon-Affiliate repository context: placeholder, active charter, archive/redirect, or retirement. No affiliate account, API, product-data, website, automation, deployment or external-service action was authorised or taken.
 
-**Confidence:** High for the empty-repository state; no product maturity can be assessed.
+## Current milestone — M-02
 
-> This is a governance timeline, not evidence of affiliate eligibility, legal compliance, API permission, revenue, website, or production readiness.
+**Status:** CLOSED — project identity reconciled.
 
-## Active task assignment — Wave 1 (M-01) — 2026-08-26T13:50:47+10:00
+The repository is now governed as **MyPrimeDelivery**, a delivery project. A bounded project contract has been added at `docs/PROJECT_CONTRACT.md`.
 
-**Authority and scope:** Darrin’s continuous-task-chain instruction. This is a read-only project-definition task; it does not authorize affiliate-account use, API access, product-data intake, link publication, automation, deployment, or changes outside this log.
+The contract deliberately does not invent the commercial model, delivery workflow, geography, technology stack, integrations, credentials or production requirements. Those require evidence.
 
-**Task M-01:** Prepare a one-page decision frame from the empty-repository state: intentional placeholder, active charter, archive/redirect, or retirement.
+## Active successor — M-03
 
-**Closure evidence:** Exact empty-repository evidence; four alternatives; scope/authority/data boundary required for each; no affiliate/account claim.
+**Task:** Maintain `docs/overseer/M-03-EVIDENCE-CHECKLIST.md` and use it to establish the minimum verified evidence required before implementation begins.
 
-**Immediate successor:** On closure and owner selection, issue **M-02**: review the selected charter and create a bounded non-production evidence checklist.
+**Required evidence:** business objective, target user, delivery operating model, core workflow, actor permissions, source of truth, minimum data model, authorised integrations, testable first vertical-slice acceptance criteria, and explicit production/data/credential boundaries.
 
-## Wave 1 task closure — M-01 — 2026-08-26T13:58:32+10:00
+**Rule:** Continue autonomously on governance, evidence reconciliation and safe documentation. Do not fabricate implementation or activate external services where the project contract does not provide evidence or authority.
 
-**Author/platform:** Manus Overseer. **Scope:** Read-only metadata review of [`Amazon-Affiliate`](https://github.com/darrinbaldwindev/Amazon-Affiliate), default branch `agent/overseer/initial-project-timeline`, with no product source, open PR, or open issue evidence. No account, API, product-data, affiliate, website, automation, deployment, or external-service action was taken.
+## Portfolio context
 
-**Result:** **M-01 CLOSED — project-charter decision frame prepared.** The evidence supports four mutually exclusive owner choices: (1) retain as an intentional placeholder; (2) approve an active project charter; (3) archive/redirect to a different canonical project; or (4) retire it. The name alone is not evidence of affiliate eligibility, program status, credentials, permitted data use, or implementation scope.
+The portfolio registry classifies MyPrimeDelivery as P2 / adaptive. Overseer/AgentOS remain higher-priority control-plane concerns, while this project should advance when its evidence permits a concrete vertical slice.
 
-**Owner decision required:** Choose one option and, if active, provide the smallest non-production charter naming objective, market, owner, content/data boundary, lawful/provider-compliant posture, canonical source, backlog, and acceptance evidence.
+## Reassessment trigger
 
-### Active successor — M-02
+Advance M-03 when new repository artifacts, owner decisions, requirements, integration evidence, tests, or other authoritative project evidence establish the missing delivery scope.
 
-**Task M-02:** On owner selection, review the chosen charter and create only its bounded non-production evidence checklist. Until then, do not invent scope or search/access affiliate services.
-
-**Status:** M-01 closed; M-02 active and blocked on owner project-classification decision.
+**Current confidence:** High that the repository is documentation-only; medium on project purpose because only the portfolio role is currently verified.
