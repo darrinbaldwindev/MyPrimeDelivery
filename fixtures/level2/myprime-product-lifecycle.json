@@ -1,0 +1,9 @@
+{
+  "schema": "myprime.level2.fixture.v1",
+  "asin": "FIXTURE-ASIN-001",
+  "category": "fixture-category",
+  "prime_eligible": false,
+  "evidence_status": "SYNTHETIC_ONLY",
+  "state": "CANDIDATE",
+  "production_write": false
+}
