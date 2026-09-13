@@ -2,46 +2,60 @@
 
 ## Status
 
-**Reconciled:** 2026-08-31  
-**Milestone:** M-02 — project-definition reconciliation  
-**Confidence:** Medium
+**Reconciled:** 2026-09-13  
+**Milestone:** M-03 — owner-purpose reconciliation  
+**Confidence:** High for product purpose; lower for implementation details
 
 ## Verified identity
 
 - Repository: `darrinbaldwindev/MyPrimeDelivery`
-- Portfolio role: **Delivery project**
-- Portfolio scheduler tier: **P2 / adaptive**
-- Current repository state: governance documentation only; no verified application implementation.
+- Owner-defined purpose: surface **top Amazon products and categories that are eligible for Prime delivery**.
+- Current repository state: governance/documentation plus a bounded synthetic AgentOS Level-2 fixture; no verified production application implementation.
 
 ## Purpose boundary
 
-This repository is treated as a delivery-project repository because that role is recorded in the portfolio registry. The specific commercial model, delivery workflow, customer experience, geographic scope, technology stack, external providers, credentials, and production requirements are **not yet verified** in this repository.
+MyPrimeDelivery is an Amazon-focused product/category discovery project. It is **not** a courier, dispatch, driver-management or last-mile delivery platform.
 
-No assumption in this contract authorizes external-service access, credential use, customer-data ingestion, payments, dispatch, deployment, or production operation.
+The project should help users discover leading Amazon products/categories where Prime-delivery eligibility is part of the selection/filtering evidence. The repository must not fabricate live Amazon ranking, price, stock or Prime-eligibility claims.
 
-## Evidence required before implementation
+## Verified facts
 
-1. **Business objective** — what delivery problem the project solves and for whom.
-2. **Operating model** — owned delivery, marketplace, third-party courier, hybrid, or other verified model.
-3. **Core workflow** — order/request intake through fulfilment, dispatch, tracking and completion.
-4. **Actors and permissions** — customer, operator, driver/courier, administrator and any other verified roles.
-5. **System boundary** — source of truth and any dependent repositories/services.
-6. **Data boundary** — minimum data required, retention expectations and sensitive-data handling constraints.
-7. **Integration boundary** — approved payment, maps, messaging, courier, commerce or other providers, if applicable.
-8. **Acceptance evidence** — testable definition of a first usable vertical slice.
+1. The project focuses on Amazon products and categories.
+2. Prime-delivery eligibility is part of the intended product-selection boundary.
+3. The goal is product/category discovery, not operating a delivery network.
+4. A deterministic synthetic Level-2 fixture exists for bounded AgentOS inspect → modify → reread → verify work.
+5. No production Amazon access, affiliate publication, ordering, credentials or live data writes are authorised by this contract.
+
+## Remaining evidence required before product implementation
+
+1. **Target marketplace/region** — e.g. Amazon AU, US, UK, multi-marketplace, or another owner-approved scope.
+2. **Ranking methodology** — what "top" means and how products/categories are ranked or selected.
+3. **Prime-eligibility evidence source** — authorised and compliant source for proving Prime eligibility.
+4. **Product-data source** — approved API/feed/manual workflow and its permitted fields/refresh behaviour.
+5. **Affiliate/commercial model** — if affiliate links or monetisation are used, the exact approved account/program and compliance rules.
+6. **User journey** — browse/search/filter/category/product-detail/outbound-click behaviour for the first usable slice.
+7. **Minimum data model** — identifiers, category, title, evidence timestamps/status, eligibility and ranking evidence, plus any permitted price/image/link fields.
+8. **Freshness/expiry rules** — when product, rank and Prime evidence becomes stale and must be revalidated.
+9. **Acceptance evidence** — testable definition of a first non-production discovery vertical slice.
 
 ## First implementation target
 
-Do not build a broad platform from assumptions. Once the missing business facts are evidenced, define the smallest non-production vertical slice that proves the critical delivery workflow end-to-end.
+Do not build a broad Amazon site from assumptions. Once the remaining evidence gates are satisfied, define the smallest non-production vertical slice that can ingest or use authorised fixture/product data, apply an explicit ranking/eligibility rule, render a bounded category/product discovery result, and prove the data provenance and freshness state.
+
+## AgentOS Level-2 contribution
+
+`docs/level2/AGENTOS-WORKLOAD-2026-09-13.md` and `fixtures/level2/myprime-product-lifecycle.json` are intentionally synthetic acceptance material. They exist to exercise governed file inspection, bounded mutation, reread, diff verification, receipts, replay protection and Green/PRS gates without touching Amazon or production systems.
 
 ## Governance rules
 
 - Keep verified facts separate from claims and assumptions.
-- Prefer evidence from repository artifacts, tests and approved owner decisions.
+- Owner direction overrides stale repository interpretations.
+- Prefer repository evidence, approved owner decisions and compliant external-data evidence.
+- Never fabricate Prime eligibility, Amazon rank, stock or price.
 - Do not expose or commit secrets or credentials.
-- Do not activate production integrations from this contract.
-- Reassess the contract whenever the canonical business purpose or architecture changes.
+- Do not activate production Amazon/affiliate integrations from this contract.
+- Reassess the contract whenever the canonical product purpose or architecture changes.
 
-## Immediate next task — M-03
+## Immediate next task
 
-Produce a bounded evidence checklist from this contract, then identify the minimum missing owner/project evidence required to start implementation without inventing scope.
+Reconcile the remaining architecture/overseer evidence documents to this owner-defined Amazon/Prime discovery purpose, then identify the minimum authoritative evidence needed for the first real non-production product-discovery slice.
