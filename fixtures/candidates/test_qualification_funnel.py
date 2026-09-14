@@ -61,6 +61,7 @@ class QualificationFunnelTests(unittest.TestCase):
             p = Path(td) / "qualified.json"
             p.write_text(json.dumps(payload), encoding="utf-8")
             result = analyze_funnel([p])
+        self.assertEqual(result["identity_conflict_concepts"], 0)
         self.assertEqual(result["qualified_concepts"], 1)
         self.assertFalse(result["publication_authority"])
         self.assertFalse(result["network_io"])
@@ -94,6 +95,40 @@ class QualificationFunnelTests(unittest.TestCase):
             p = Path(td) / "split.json"
             p.write_text(json.dumps(payload), encoding="utf-8")
             result = analyze_funnel([p])
+        self.assertEqual(result["qualified_concepts"], 0)
+        self.assertFalse(result["publication_authority"])
+        self.assertFalse(result["network_io"])
+
+    def test_conflicting_known_asins_fail_closed_even_if_one_observation_is_complete(self):
+        payload = {"candidates": [
+            {
+                "candidate_id": "cand-904",
+                "title": "Synthetic Identity Conflict Product",
+                "asin": "B000TEST04",
+                "prime_evidence_state": "CURRENT_VERIFIED",
+                "freshness_state": "CURRENT",
+                "ranking_method_id": "owner-approved-v1",
+                "ranking_evidence_source": "authorised-provider",
+                "source_rights_state": "PERMITTED",
+                "outbound_destination_state": "VERIFIED"
+            },
+            {
+                "candidate_id": "cand-905",
+                "title": "Synthetic Identity Conflict Product",
+                "asin": "B000TEST05",
+                "prime_evidence_state": "UNKNOWN",
+                "freshness_state": "RESEARCH_SNAPSHOT",
+                "ranking_method_id": "UNKNOWN",
+                "ranking_evidence_source": "UNKNOWN",
+                "source_rights_state": "UNKNOWN",
+                "outbound_destination_state": "UNKNOWN"
+            }
+        ]}
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "identity-conflict.json"
+            p.write_text(json.dumps(payload), encoding="utf-8")
+            result = analyze_funnel([p])
+        self.assertEqual(result["identity_conflict_concepts"], 1)
         self.assertEqual(result["qualified_concepts"], 0)
         self.assertFalse(result["publication_authority"])
         self.assertFalse(result["network_io"])
