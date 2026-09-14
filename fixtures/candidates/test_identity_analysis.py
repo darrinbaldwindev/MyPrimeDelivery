@@ -7,7 +7,12 @@ from pathlib import Path
 from analyze_candidate_collection import analyze, normalize_title
 
 BASE = Path(__file__).parent
-PATHS = [BASE / "first-100-research.json", BASE / "research-tranche-004.json", BASE / "research-tranche-005.json"]
+PATHS = [
+    BASE / "first-100-research.json",
+    BASE / "research-tranche-004.json",
+    BASE / "research-tranche-005.json",
+    BASE / "research-tranche-009.json",
+]
 
 
 class IdentityAnalysisTests(unittest.TestCase):
@@ -16,12 +21,32 @@ class IdentityAnalysisTests(unittest.TestCase):
 
     def test_current_collection_detects_known_duplicate(self):
         result = analyze(PATHS)
-        self.assertEqual(result["evidence_rows"], 58)
-        self.assertEqual(result["unique_normalized_titles"], 57)
+        self.assertEqual(result["evidence_rows"], 101)
+        self.assertEqual(result["unique_normalized_titles"], 100)
         self.assertEqual(result["duplicate_row_count"], 1)
         groups = {g["normalized_title"]: g for g in result["duplicate_groups"]}
         self.assertIn("ninja woodfire outdoor oven", groups)
         self.assertEqual(groups["ninja woodfire outdoor oven"]["candidate_ids"], ["cand-030", "cand-058"])
+
+    def test_all_launch_categories_remain_represented(self):
+        result = analyze(PATHS)
+        self.assertEqual(
+            set(result["category_row_counts"]),
+            {
+                "cat-automotive",
+                "cat-baby",
+                "cat-beauty-personal-care",
+                "cat-electronics",
+                "cat-garden-outdoors",
+                "cat-health-household",
+                "cat-home-kitchen",
+                "cat-office-products",
+                "cat-pet-supplies",
+                "cat-sports-outdoors",
+                "cat-tools-home-improvement",
+                "cat-toys-games",
+            },
+        )
 
     def test_duplicate_candidate_id_fails(self):
         payload = json.loads(PATHS[1].read_text(encoding="utf-8"))
