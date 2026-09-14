@@ -1,0 +1,53 @@
+[
+  {
+    "product_id": "SYNTH-001",
+    "asin": null,
+    "marketplace": "FIXTURE",
+    "category_slug": "fixture-top-products",
+    "title": "Synthetic Current Product",
+    "outbound_url": null,
+    "prime_state": "ELIGIBLE",
+    "prime_evidence_source": "FIXTURE-PRIME-001",
+    "prime_checked_at": "2026-09-14T00:00:00Z",
+    "ranking_position": 1,
+    "ranking_method": "FIXTURE_EDITORIAL_ORDER",
+    "ranking_checked_at": "2026-09-14T00:00:00Z",
+    "product_refreshed_at": "2026-09-14T00:00:00Z",
+    "evidence_state": "CURRENT",
+    "evidence_notes": "Synthetic current evidence for deterministic rendering only."
+  },
+  {
+    "product_id": "SYNTH-002",
+    "asin": null,
+    "marketplace": "FIXTURE",
+    "category_slug": "fixture-top-products",
+    "title": "Synthetic Stale Product",
+    "outbound_url": null,
+    "prime_state": "ELIGIBLE",
+    "prime_evidence_source": "FIXTURE-PRIME-002",
+    "prime_checked_at": "2026-09-01T00:00:00Z",
+    "ranking_position": 2,
+    "ranking_method": "FIXTURE_EDITORIAL_ORDER",
+    "ranking_checked_at": "2026-09-01T00:00:00Z",
+    "product_refreshed_at": "2026-09-14T00:00:00Z",
+    "evidence_state": "STALE",
+    "evidence_notes": "Synthetic stale evidence; must never render as current."
+  },
+  {
+    "product_id": "SYNTH-003",
+    "asin": null,
+    "marketplace": "FIXTURE",
+    "category_slug": "fixture-top-products",
+    "title": "Synthetic Unknown Product",
+    "outbound_url": null,
+    "prime_state": "UNKNOWN",
+    "prime_evidence_source": null,
+    "prime_checked_at": null,
+    "ranking_position": 3,
+    "ranking_method": "FIXTURE_EDITORIAL_ORDER",
+    "ranking_checked_at": null,
+    "product_refreshed_at": "2026-09-14T00:00:00Z",
+    "evidence_state": "UNKNOWN",
+    "evidence_notes": "Synthetic unknown evidence; no positive Prime or ranking claim permitted."
+  }
+]
