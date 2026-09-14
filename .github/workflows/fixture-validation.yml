@@ -24,3 +24,7 @@ jobs:
         run: python fixtures/m03/validate_fixture.py fixtures/m03/prime-discovery.synthetic.json
       - name: Run fail-closed fixture tests
         run: python -m unittest fixtures/m03/test_validate_fixture.py
+      - name: Render synthetic component projection
+        run: python fixtures/m03/render_fixture.py fixtures/m03/prime-discovery.synthetic.json
+      - name: Run fail-closed render tests
+        run: python -m unittest fixtures/m03/test_render_fixture.py
