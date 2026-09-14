@@ -1,31 +1,63 @@
 # MyPrimeDelivery — M-04 Implementation Readiness
 
+Date: 2026-09-14
+Status: ACTIVE / NON-PRODUCTION SLICE READY; LIVE AMAZON INTEGRATION BLOCKED
+
 ## Current result
 
-**BLOCKED on authoritative product evidence.**
+MyPrimeDelivery is no longer blocked on basic product identity or on creating a synthetic non-production vertical slice.
 
-The repository now has a reconciled project identity, project contract, bounded evidence checklist and architecture boundary. No application code should be generated until the missing project facts are established.
+Owner direction now establishes the product as an Amazon-focused product/category discovery site for top products/categories eligible for Prime delivery, using WordPress as the site platform. The repository has a bounded WordPress data model, synthetic fixture, renderer/validator code, fail-closed tests, and a fixture-validation workflow.
+
+Live Amazon-backed product publication remains blocked until marketplace, ranking, data-provider, Prime/deal evidence, affiliate/compliance and freshness decisions are authorised.
 
 ## Readiness matrix
 
 | Requirement | Evidence | Status |
 |---|---|---|
-| Project identity | Portfolio registry + repository | PASS |
-| Business objective | None in repo | BLOCKED |
-| Target user | None in repo | BLOCKED |
-| Operating model | None in repo | BLOCKED |
-| Core workflow | None in repo | BLOCKED |
-| Actor permissions | None in repo | BLOCKED |
-| Source of truth | None in repo | BLOCKED |
-| Data model | None in repo | BLOCKED |
-| Integrations | None in repo | BLOCKED |
-| Acceptance tests | None in repo | BLOCKED |
-| Production boundary | Explicitly non-authorised | PASS |
+| Product identity | Owner direction + `docs/PROJECT_CONTRACT.md` | PASS |
+| Site platform | WordPress owner decision + `docs/WORDPRESS-STACK-DECISION.md` | PASS |
+| Discovery operating model | Catalogue/outbound-referral; no local checkout | PASS |
+| First user journey | Homepage -> category -> ranked list -> detail -> governed outbound CTA | PASS for synthetic slice |
+| Launch taxonomy | `docs/WORDPRESS-CATEGORY-TAXONOMY.md` | PASS for planning |
+| Synthetic data model | `docs/M03-WORDPRESS-DATA-MODEL-AND-FIRST-SLICE.md` + fixture | PASS |
+| Fail-closed validation | `fixtures/m03/validate_fixture.py` + unit tests | PASS in repository design |
+| Synthetic rendering contract | renderer + render tests | PASS in repository design |
+| CI validation workflow | `.github/workflows/fixture-validation.yml` | PRESENT; exact run evidence must be checked per head |
+| Deal/time-sensitive evidence model | `docs/DEAL-OFFER-EVIDENCE-CONTRACT.md` | PASS for non-production contract |
+| Candidate qualification pipeline | `docs/PRODUCT-CANDIDATE-QUALIFICATION-PIPELINE.md` | PASS for research/intake contract |
+| Target marketplace | Owner has discussed Amazon Australia candidates, but canonical marketplace decision is not yet promoted | OPEN |
+| Definition of `top` / ranking method | Not yet owner/authoritatively selected | BLOCKED for live claims |
+| Prime evidence source | No authorised live source selected | BLOCKED for live claims |
+| Product/deal data source | No authorised live provider selected | BLOCKED for live claims |
+| Affiliate account/tag and publication rights | Not authorised in repo | BLOCKED for live outbound publication |
+| Live freshness/expiry intervals | Provider/terms dependent | BLOCKED |
+| Production deployment | Not authorised | BLOCKED |
 
-## Autonomous next action
+## Safe autonomous work now
 
-Continue safe portfolio reconciliation and documentation only. If authoritative MyPrimeDelivery requirements appear in repository history, connected project artifacts, or owner-provided evidence, reconcile them against the contract before implementation.
+Permitted useful work includes:
 
-## Exit condition
+- synthetic fixture/test hardening;
+- WordPress content/component specification;
+- category/subcategory planning;
+- evidence/freshness state modeling;
+- candidate intake schema and non-production research preparation;
+- Level-2 bounded acceptance workloads;
+- repository/CI verification and documentation reconciliation.
 
-M-04 can close when the evidence checklist is sufficiently complete to write a small, testable, non-production vertical-slice specification without inventing material requirements.
+Do not turn public web research into `QUALIFIED` product records without authoritative Prime/ranking/freshness evidence.
+
+## Exit condition for live integration readiness
+
+The live Amazon integration gate can advance only when all are evidenced:
+
+1. target marketplace/region;
+2. explicit ranking/selection method for `top`;
+3. authorised product + Prime/deal evidence provider and permitted fields;
+4. Amazon Associates/affiliate publication authority if used;
+5. source-specific freshness/expiry rules;
+6. live-data negative tests and fail-closed behavior;
+7. non-production staging validation before any production publication.
+
+No overall GREEN is implied by synthetic-slice readiness.
