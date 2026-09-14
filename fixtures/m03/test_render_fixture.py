@@ -72,6 +72,39 @@ class RenderFixtureTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "duplicate ranking_position"):
             project_render_model(data)
 
+    def test_duplicate_product_id_or_asin_fails_closed(self):
+        for field in ("product_id", "asin"):
+            data = copy.deepcopy(BASE)
+            data["products"][1][field] = data["products"][0][field]
+            with self.assertRaisesRegex(ValueError, f"duplicate {field}"):
+                project_render_model(data)
+
+    def test_product_category_mismatch_fails_closed(self):
+        data = copy.deepcopy(BASE)
+        data["products"][0]["category_id"] = "OTHER-CATEGORY"
+        with self.assertRaisesRegex(ValueError, "category_id mismatch"):
+            project_render_model(data)
+
+    def test_ranking_method_mismatch_fails_closed(self):
+        data = copy.deepcopy(BASE)
+        data["products"][0]["ranking_method_id"] = "OTHER-RANKING"
+        with self.assertRaisesRegex(ValueError, "ranking_method_id mismatch"):
+            project_render_model(data)
+
+    def test_product_evidence_contradiction_suppresses_all_positive_presentation(self):
+        data = copy.deepcopy(BASE)
+        product = data["products"][0]
+        product["prime_state"] = "VERIFIED"
+        product["outbound_destination_state"] = "VERIFIED"
+        product["outbound_url"] = "https://example.invalid/fixture-only"
+        product["freshness_state"] = "CURRENT"
+        product["evidence_status"] = "UNKNOWN"
+        model = project_render_model(data)
+        first = model["products"][0]
+        self.assertFalse(first["show_prime_positive_claim"])
+        self.assertFalse(first["show_ranking"])
+        self.assertFalse(first["show_outbound_cta"])
+
     def test_verified_destination_without_url_suppresses_cta(self):
         data = copy.deepcopy(BASE)
         data["products"][0]["outbound_destination_state"] = "VERIFIED"
