@@ -75,6 +75,7 @@ if __name__ == "__main__":
             base / "first-100-research.json",
             base / "research-tranche-004.json",
             base / "research-tranche-005.json",
+            base / "research-tranche-009.json",
         ]
     result = analyze(targets)
     print(json.dumps(result, indent=2, sort_keys=True))
