@@ -65,6 +65,39 @@ class QualificationFunnelTests(unittest.TestCase):
         self.assertFalse(result["publication_authority"])
         self.assertFalse(result["network_io"])
 
+    def test_separate_observations_cannot_combine_into_qualification(self):
+        payload = {"candidates": [
+            {
+                "candidate_id": "cand-902",
+                "title": "Synthetic Split Evidence Product",
+                "asin": "B000TEST03",
+                "prime_evidence_state": "CURRENT_VERIFIED",
+                "freshness_state": "CURRENT",
+                "ranking_method_id": "UNKNOWN",
+                "ranking_evidence_source": "UNKNOWN",
+                "source_rights_state": "UNKNOWN",
+                "outbound_destination_state": "UNKNOWN"
+            },
+            {
+                "candidate_id": "cand-903",
+                "title": "Synthetic Split Evidence Product",
+                "asin": "UNKNOWN",
+                "prime_evidence_state": "UNKNOWN",
+                "freshness_state": "RESEARCH_SNAPSHOT",
+                "ranking_method_id": "owner-approved-v1",
+                "ranking_evidence_source": "authorised-provider",
+                "source_rights_state": "PERMITTED",
+                "outbound_destination_state": "VERIFIED"
+            }
+        ]}
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "split.json"
+            p.write_text(json.dumps(payload), encoding="utf-8")
+            result = analyze_funnel([p])
+        self.assertEqual(result["qualified_concepts"], 0)
+        self.assertFalse(result["publication_authority"])
+        self.assertFalse(result["network_io"])
+
 
 if __name__ == "__main__":
     unittest.main()
