@@ -27,15 +27,16 @@ class RenderFixtureTests(unittest.TestCase):
         first = model["products"][0]
         self.assertFalse(first["show_outbound_cta"])
 
-    def test_stale_product_suppresses_positive_prime_claim(self):
+    def test_stale_product_suppresses_positive_prime_claim_and_ranking(self):
         data = copy.deepcopy(BASE)
-        data["products"][0]["prime_state"] = "STALE"
-        data["products"][0]["evidence_status"] = "STALE"
+        data["products"][0]["prime_state"] = "VERIFIED"
+        data["products"][0]["evidence_status"] = "VERIFIED"
         data["products"][0]["freshness_state"] = "STALE"
         model = project_render_model(data)
         first = model["products"][0]
         self.assertEqual(first["evidence_badge"], "STALE")
         self.assertFalse(first["show_prime_positive_claim"])
+        self.assertFalse(first["show_ranking"])
 
     def test_missing_ranking_evidence_suppresses_ranking(self):
         data = copy.deepcopy(BASE)
@@ -48,6 +49,15 @@ class RenderFixtureTests(unittest.TestCase):
         data = copy.deepcopy(BASE)
         data["products"][0]["outbound_destination_state"] = "VERIFIED"
         data["products"][0]["outbound_url"] = None
+        model = project_render_model(data)
+        first = model["products"][0]
+        self.assertFalse(first["show_outbound_cta"])
+
+    def test_stale_verified_destination_suppresses_cta(self):
+        data = copy.deepcopy(BASE)
+        data["products"][0]["outbound_destination_state"] = "VERIFIED"
+        data["products"][0]["outbound_url"] = "https://example.invalid/fixture-only"
+        data["products"][0]["freshness_state"] = "STALE"
         model = project_render_model(data)
         first = model["products"][0]
         self.assertFalse(first["show_outbound_cta"])
