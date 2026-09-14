@@ -27,14 +27,31 @@ def project_render_model(data):
         raise ValueError("synthetic renderer requires fixture_only=true")
 
     category = data["category"]
+    ranking_method = data.get("ranking_method", {})
     products_input = data["products"]
-    _require_unique(products_input, "product_id")
-    _require_unique(products_input, "asin")
 
     category_id = category.get("category_id")
     ranking_method_id = category.get("ranking_method_id")
-    if not category_id or not ranking_method_id:
-        raise ValueError("category identity/ranking method is incomplete")
+    marketplace = category.get("marketplace")
+    if not category_id or not ranking_method_id or not marketplace:
+        raise ValueError("category identity/ranking method/marketplace is incomplete")
+    if ranking_method.get("ranking_method_id") != ranking_method_id:
+        raise ValueError("ranking method identity mismatch")
+
+    if not products_input:
+        return {
+            "component": "mpd-category-view",
+            "category_id": category_id,
+            "category_name": category["name"],
+            "marketplace": marketplace,
+            "ranking_evidence_badge": category["freshness_state"],
+            "fixture_disclosure": True,
+            "inventory_state": "EMPTY",
+            "products": [],
+        }
+
+    _require_unique(products_input, "product_id")
+    _require_unique(products_input, "asin")
 
     category_freshness = category["freshness_state"]
     category_current = (
@@ -52,6 +69,11 @@ def project_render_model(data):
             raise ValueError(f"{product.get('asin')}: category_id mismatch")
         if product.get("ranking_method_id") != ranking_method_id:
             raise ValueError(f"{product.get('asin')}: ranking_method_id mismatch")
+        if product.get("marketplace") != marketplace:
+            raise ValueError(f"{product.get('asin')}: marketplace mismatch")
+        ranking_source = product.get("ranking_evidence_source")
+        if ranking_source and ranking_source != ranking_method.get("source_type"):
+            raise ValueError(f"{product.get('asin')}: ranking evidence source/method identity mismatch")
 
         destination_state = product["outbound_destination_state"]
         freshness_state = product["freshness_state"]
@@ -75,7 +97,7 @@ def project_render_model(data):
                 and evidence_status == "VERIFIED"
                 and freshness_state == "CURRENT"
             ),
-            "show_ranking": bool(product.get("ranking_evidence_source")) and evidence_current and category_current,
+            "show_ranking": bool(ranking_source) and evidence_current and category_current,
             "show_outbound_cta": (
                 destination_state == "VERIFIED"
                 and evidence_status == "VERIFIED"
@@ -89,9 +111,10 @@ def project_render_model(data):
         "component": "mpd-category-view",
         "category_id": category_id,
         "category_name": category["name"],
-        "marketplace": category["marketplace"],
+        "marketplace": marketplace,
         "ranking_evidence_badge": category_freshness,
         "fixture_disclosure": True,
+        "inventory_state": "POPULATED",
         "products": products,
     }
 
