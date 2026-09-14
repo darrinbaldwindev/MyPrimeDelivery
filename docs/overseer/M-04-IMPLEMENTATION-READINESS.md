@@ -18,6 +18,7 @@ Live Amazon-backed publication remains blocked on owner/provider/account authori
 | Launch taxonomy | `docs/WORDPRESS-CATEGORY-TAXONOMY.md` | PASS for planning |
 | Synthetic product/deal/rendering | `fixtures/m03/`, `fixtures/deals/` | PASS |
 | Candidate qualification/research | candidate docs + fixtures | PASS for research only |
+| Research milestone | 101 evidence rows -> 100 normalized product concepts | PASS for research breadth; NOT qualification |
 | Identity/dedupe contract | `docs/PRODUCT-IDENTITY-CONTRACT.md` + candidate analyzer | PASS for staging |
 | Provisional ranking | `docs/RANKING-METHODOLOGY-PROVISIONAL.md` + `fixtures/ranking/` | PASS for staging only |
 | Source rights/provider authority | `fixtures/source_rights/` | PASS for contract/tests |
@@ -25,7 +26,7 @@ Live Amazon-backed publication remains blocked on owner/provider/account authori
 | Creators API AU provider profile | `docs/CREATORS-API-AU-MAPPING-PROFILE.md` | PASS as documentation-backed candidate profile; NOT live-authorised |
 | Provider snapshot lineage/replay | `fixtures/provider_profiles/` | PASS for synthetic deterministic replay/version handling |
 | WordPress staging projection | provider-profile validator projection | PASS; publication/outbound/network all disabled |
-| Exact-head CI for Batch 008 code | Fixture validation run `34854899891` on `d12906451a9e10eb4ab340d206f6547986bf221a` | PASS / SUCCESS |
+| Exact-head CI for 100-concept code | Fixture validation run `34855955331` on `90ecbdf5e5654aa17105d654dbbf3963123f8a83` | PASS / SUCCESS |
 | Target live marketplace | AU research/profile direction exists, owner promotion still OPEN | OPEN |
 | Production definition of `top` | provisional method only | BLOCKED for live claims |
 | Live Creators API approval/credentials | none authorised in repo | BLOCKED |
@@ -34,30 +35,39 @@ Live Amazon-backed publication remains blocked on owner/provider/account authori
 | Field-specific live expiry/caching | exact licence/use policy approval required | BLOCKED |
 | Production WordPress publication/deployment | not authorised | BLOCKED |
 
-## Batch 008 provider-profile result
+## Research milestone
 
-The first provider-specific candidate profile is `amazon-creators-api-au-v1` for `www.amazon.com.au`. Official documentation supports mapping ASIN, ParentASIN, ItemInfo title, Images and OffersV2 observations. The profile explicitly refuses to infer Prime from availability, buy-box status, merchant information, offer type, FBA-like signals, or deal presence.
+The repository now contains 101 candidate evidence rows across four tranches. Cross-tranche analysis resolves these to exactly 100 normalized-title concepts, with one retained duplicate evidence pair: `cand-030` and `cand-058`, both `Ninja Woodfire Outdoor Oven`.
 
-Synthetic lineage now enforces:
-- duplicate replay with identical payload is idempotent;
-- older provider versions cannot overwrite newer evidence;
-- conflicting payloads at the same version fail closed;
-- marketplace/header mismatch fails;
-- stable evidence fingerprints are generated for accepted snapshots.
+This is a breadth milestone only. It does **not** mean 100 ASIN-verified products, 100 Prime-verified products, or 100 publishable products. Historical Prime Day/event evidence remains historical discovery evidence and all new Batch 009 records keep product-specific Prime evidence `UNKNOWN`.
 
-The staging projection keeps `publication_authority=false`, `outbound_enabled=false`, `network_io=false`, and `prime_state=UNKNOWN`. Image output remains suppressed while image-rights/caching policy is unresolved.
+Current row counts by launch category:
+- Electronics 27
+- Home & Kitchen 20
+- Health & Household 12
+- Beauty & Personal Care 10
+- Toys & Games 7
+- Office Products 5
+- Automotive 4
+- Baby 4
+- Garden & Outdoors 4
+- Pet Supplies 4
+- Sports & Outdoors 2
+- Tools & Home Improvement 2
 
-## Current research and commercial truth
+## Provider-profile result
 
-The repository still has 58 research evidence rows representing 57 exact normalized-title concepts across all 12 launch categories. No live product is `QUALIFIED`.
+The provider-specific candidate profile is `amazon-creators-api-au-v1` for `www.amazon.com.au`. Official documentation supports mapping ASIN, ParentASIN, ItemInfo title, Images and OffersV2 observations. The profile explicitly refuses to infer Prime from availability, buy-box status, merchant information, offer type, FBA-like signals, or deal presence.
+
+Synthetic lineage enforces replay/version consistency, marketplace/header agreement and stable evidence fingerprints. Staging keeps `publication_authority=false`, `outbound_enabled=false`, `network_io=false`, and `prime_state=UNKNOWN`.
 
 ## Safe autonomous work now
 
 Useful bounded work includes:
-- verify exact Creators API fields relevant to Prime eligibility rather than inferring them;
+- replace unresolved product-family research rows with exact product identity evidence where possible;
+- verify exact Creators API or other authorised fields relevant to Prime eligibility rather than inferring them;
 - model API error/throttle/retry behavior and snapshot provenance;
 - refine staging WordPress component behavior for UNKNOWN/HOLD fields;
-- continue candidate identity research without guessing ASINs;
 - prepare an owner decision packet for AU marketplace + live definition of `top` + Associates/Creators API setup.
 
 ## Exit condition for live integration readiness
@@ -72,4 +82,4 @@ Live integration requires all of:
 7. Associates Partner Tag/publication authority;
 8. live-data negative tests and staging validation before production.
 
-No overall GREEN is implied by synthetic-slice readiness.
+No overall GREEN is implied by the 100-concept research milestone or synthetic-slice readiness.
