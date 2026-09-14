@@ -4,6 +4,7 @@ from pathlib import Path
 
 
 NON_CURRENT_STATES = {"STALE", "UNKNOWN", "BLOCKED"}
+CURRENT_EVIDENCE_STATUSES = {"VERIFIED", "FIXTURE"}
 
 
 def _ranking_position(product):
@@ -14,15 +15,27 @@ def _ranking_position(product):
 
 
 def project_render_model(data):
+    if data.get("fixture_only") is not True:
+        raise ValueError("synthetic renderer requires fixture_only=true")
+
     category = data["category"]
     category_freshness = category["freshness_state"]
-    category_current = category_freshness not in NON_CURRENT_STATES
+    category_current = (
+        category_freshness not in NON_CURRENT_STATES
+        and category.get("evidence_status") in CURRENT_EVIDENCE_STATUSES
+    )
+
+    positions = [_ranking_position(product) for product in data["products"]]
+    if len(positions) != len(set(positions)):
+        raise ValueError("duplicate ranking_position")
+
     products = []
     for product in sorted(data["products"], key=_ranking_position):
         destination_state = product["outbound_destination_state"]
         freshness_state = product["freshness_state"]
+        evidence_status = product.get("evidence_status")
         evidence_current = freshness_state not in NON_CURRENT_STATES
-        fixture_disclosure = bool(data.get("fixture_only"))
+        fixture_disclosure = True
         products.append({
             "component": "mpd-product-card",
             "product_id": product["product_id"],
@@ -34,11 +47,16 @@ def project_render_model(data):
             "fixture_disclosure": fixture_disclosure,
             "show_prime_positive_claim": (
                 product["prime_state"] == "VERIFIED"
-                and product["evidence_status"] == "VERIFIED"
+                and evidence_status == "VERIFIED"
                 and freshness_state == "CURRENT"
             ),
             "show_ranking": bool(product.get("ranking_evidence_source")) and evidence_current and category_current,
-            "show_outbound_cta": destination_state == "VERIFIED" and bool(product.get("outbound_url")) and evidence_current,
+            "show_outbound_cta": (
+                destination_state == "VERIFIED"
+                and evidence_status == "VERIFIED"
+                and bool(product.get("outbound_url"))
+                and evidence_current
+            ),
             "show_local_checkout": False,
             "commercial_fields": {},
         })
@@ -48,7 +66,7 @@ def project_render_model(data):
         "category_name": category["name"],
         "marketplace": category["marketplace"],
         "ranking_evidence_badge": category_freshness,
-        "fixture_disclosure": bool(data.get("fixture_only")),
+        "fixture_disclosure": True,
         "products": products,
     }
 
