@@ -14,6 +14,8 @@ class RenderFixtureTests(unittest.TestCase):
     def test_fixture_renders_three_products_without_positive_prime_claims(self):
         model = project_render_model(copy.deepcopy(BASE))
         self.assertEqual(len(model["products"]), 3)
+        self.assertTrue(model["fixture_disclosure"])
+        self.assertTrue(all(p["fixture_disclosure"] for p in model["products"]))
         self.assertTrue(all(not p["show_prime_positive_claim"] for p in model["products"]))
         self.assertTrue(all(not p["show_outbound_cta"] for p in model["products"]))
         self.assertTrue(all(not p["show_local_checkout"] for p in model["products"]))
@@ -24,8 +26,7 @@ class RenderFixtureTests(unittest.TestCase):
         data["products"][0]["outbound_destination_state"] = "DISABLED"
         data["products"][0]["outbound_url"] = None
         model = project_render_model(data)
-        first = model["products"][0]
-        self.assertFalse(first["show_outbound_cta"])
+        self.assertFalse(model["products"][0]["show_outbound_cta"])
 
     def test_stale_product_suppresses_positive_prime_claim_and_ranking(self):
         data = copy.deepcopy(BASE)
@@ -38,29 +39,41 @@ class RenderFixtureTests(unittest.TestCase):
         self.assertFalse(first["show_prime_positive_claim"])
         self.assertFalse(first["show_ranking"])
 
+    def test_category_stale_or_unknown_suppresses_positive_ranking(self):
+        for state in ("STALE", "UNKNOWN", "BLOCKED"):
+            data = copy.deepcopy(BASE)
+            data["category"]["freshness_state"] = state
+            model = project_render_model(data)
+            self.assertTrue(all(not p["show_ranking"] for p in model["products"]))
+
     def test_missing_ranking_evidence_suppresses_ranking(self):
         data = copy.deepcopy(BASE)
         data["products"][0]["ranking_evidence_source"] = ""
         model = project_render_model(data)
-        first = model["products"][0]
-        self.assertFalse(first["show_ranking"])
+        self.assertFalse(model["products"][0]["show_ranking"])
+
+    def test_invalid_ranking_position_fails_closed_before_render(self):
+        for bad in (None, 0, -1, "1"):
+            data = copy.deepcopy(BASE)
+            data["products"][0]["ranking_position"] = bad
+            with self.assertRaises(ValueError):
+                project_render_model(data)
 
     def test_verified_destination_without_url_suppresses_cta(self):
         data = copy.deepcopy(BASE)
         data["products"][0]["outbound_destination_state"] = "VERIFIED"
         data["products"][0]["outbound_url"] = None
         model = project_render_model(data)
-        first = model["products"][0]
-        self.assertFalse(first["show_outbound_cta"])
+        self.assertFalse(model["products"][0]["show_outbound_cta"])
 
-    def test_stale_verified_destination_suppresses_cta(self):
-        data = copy.deepcopy(BASE)
-        data["products"][0]["outbound_destination_state"] = "VERIFIED"
-        data["products"][0]["outbound_url"] = "https://example.invalid/fixture-only"
-        data["products"][0]["freshness_state"] = "STALE"
-        model = project_render_model(data)
-        first = model["products"][0]
-        self.assertFalse(first["show_outbound_cta"])
+    def test_stale_or_blocked_verified_destination_suppresses_cta(self):
+        for state in ("STALE", "BLOCKED"):
+            data = copy.deepcopy(BASE)
+            data["products"][0]["outbound_destination_state"] = "VERIFIED"
+            data["products"][0]["outbound_url"] = "https://example.invalid/fixture-only"
+            data["products"][0]["freshness_state"] = state
+            model = project_render_model(data)
+            self.assertFalse(model["products"][0]["show_outbound_cta"])
 
     def test_optional_commercial_input_is_not_projected(self):
         data = copy.deepcopy(BASE)
