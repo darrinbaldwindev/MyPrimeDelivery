@@ -4,44 +4,83 @@
 
 `darrinbaldwindev/MyPrimeDelivery`
 
-## Reconciliation — 2026-08-31
+## Current canonical product truth — 2026-09-14
 
-The portfolio registry identifies this repository as the **MyPrimeDelivery — Delivery project**, P2 / adaptive. The repository itself currently contains governance documentation rather than a verified application implementation.
+MyPrimeDelivery is an Amazon-focused product/category discovery website for top products/categories eligible for Prime delivery.
 
-The earlier Amazon-Affiliate framing is retained below as historical evidence. It is **not** treated as the current project charter because it conflicts with the current portfolio identity.
+Owner direction also establishes WordPress as the site platform.
 
-## Historical baseline — 2026-08-26
+The project is **not** a courier, dispatch, driver-management, maps/routing or last-mile logistics system. Earlier portfolio/log references to a generic "Delivery project" are stale historical classifications and must not control implementation.
 
-No product purpose, market, content model, affiliate-program relationship, or implementation scope was verified in the repository at that time. The historical log therefore required an owner classification before implementation.
+## Current repository state
 
-## Historical Wave 1 — M-01
+The repository is no longer documentation-only. It contains:
+- governance/project contracts;
+- WordPress stack/taxonomy/data-model specifications;
+- synthetic product/category fixture + fail-closed validator/render tests;
+- executable deal-state fixture + tests;
+- real research-only Amazon-Australia candidate datasets;
+- candidate fail-closed validation;
+- GitHub Actions fixture validation.
 
-**Status:** CLOSED.
+No live Amazon product is currently qualified for publication from repository evidence alone.
 
-A decision frame was prepared for the then-assumed Amazon-Affiliate repository context: placeholder, active charter, archive/redirect, or retirement. No affiliate account, API, product-data, website, automation, deployment or external-service action was authorised or taken.
+## Historical baseline — 2026-08-26 to 2026-08-31
 
-## Current milestone — M-02
+Earlier work lacked authoritative product-purpose evidence and temporarily reconciled the repository against a generic portfolio "Delivery project" label. That label generated speculative courier/commerce dependency assumptions. Owner direction has superseded that interpretation.
 
-**Status:** CLOSED — project identity reconciled.
+Historical references are retained only as provenance, not as current architecture.
 
-The repository is now governed as **MyPrimeDelivery**, a delivery project. A bounded project contract has been added at `docs/PROJECT_CONTRACT.md`.
+## Current active milestones
 
-The contract deliberately does not invent the commercial model, delivery workflow, geography, technology stack, integrations, credentials or production requirements. Those require evidence.
+### M-03 — Evidence and non-production vertical slice
 
-## Active successor — M-03
+**Status:** ACTIVE / synthetic slice established.
 
-**Task:** Maintain `docs/overseer/M-03-EVIDENCE-CHECKLIST.md` and use it to establish the minimum verified evidence required before implementation begins.
+Maintain the evidence checklist and fail closed on live Amazon claims until marketplace, `top` methodology, authorised data/Prime/deal provider, publication authority and freshness rules are established.
 
-**Required evidence:** business objective, target user, delivery operating model, core workflow, actor permissions, source of truth, minimum data model, authorised integrations, testable first vertical-slice acceptance criteria, and explicit production/data/credential boundaries.
+### M-04 — Implementation readiness
 
-**Rule:** Continue autonomously on governance, evidence reconciliation and safe documentation. Do not fabricate implementation or activate external services where the project contract does not provide evidence or authority.
+**Status:** NON-PRODUCTION WORDPRESS/DISCOVERY SLICE READY; LIVE AMAZON INTEGRATION BLOCKED.
 
-## Portfolio context
+Synthetic data, rendering, deal states, research-candidate validation and CI can progress safely.
 
-The portfolio registry classifies MyPrimeDelivery as P2 / adaptive. Overseer/AgentOS remain higher-priority control-plane concerns, while this project should advance when its evidence permits a concrete vertical slice.
+### M-05 — Dependency reconciliation
 
-## Reassessment trigger
+**Status:** RECONCILED TO AMAZON DISCOVERY MODEL.
 
-Advance M-03 when new repository artifacts, owner decisions, requirements, integration evidence, tests, or other authoritative project evidence establish the missing delivery scope.
+Current dependency model is:
 
-**Current confidence:** High that the repository is documentation-only; medium on project purpose because only the portfolio role is currently verified.
+`authorised Amazon/provider evidence -> normalised MyPrimeDelivery record -> evidence/ranking evaluation -> WordPress/WooCommerce presentation -> governed Amazon outbound CTA`
+
+Courier, dispatch, driver, maps, local checkout/payment/shipping/order dependencies are not part of the current product model.
+
+## Current research state
+
+A first 30-record Amazon-Australia research tranche exists under `fixtures/candidates/first-100-research.json`.
+
+Batch 004 adds a second gap-closing tranche under `fixtures/candidates/research-tranche-004.json` and introduces `docs/RESEARCH-SOURCE-QUALITY-HIERARCHY.md` so discovery evidence cannot be mistaken for Prime/ranking/publication authority.
+
+Research records may be `DISCOVERED` or `CANDIDATE`; `QUALIFIED` remains evidence-gated.
+
+## AgentOS Level-2 alignment
+
+MyPrimeDelivery retains the bounded non-production Level-2 fixture at `fixtures/level2/myprime-product-lifecycle.json`.
+
+Do not create an alternate scheduler, mission ledger, worker registry, authority, persistence, governance, Green or PRS system.
+
+## Hard boundaries
+
+No merge/approve/ready/rebase/deploy authority, production writes, credential changes, Amazon ordering/account actions, purchases, affiliate publication, live scraping, or production autonomy without explicit owner authorization.
+
+## Reassessment triggers
+
+Reassess immediately when any of the following become authoritative:
+- target Amazon marketplace;
+- ranking/selection methodology for `top`;
+- authorised Amazon product/Prime/deal interface;
+- Amazon Associates/publication authority;
+- live freshness/expiry requirements;
+- staging/production hosting authority.
+
+**Current confidence:** High on product purpose, WordPress direction, synthetic/readiness architecture and research boundaries; low/blocked on live Amazon integration/publication authority.
