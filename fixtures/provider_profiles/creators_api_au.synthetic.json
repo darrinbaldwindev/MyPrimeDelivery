@@ -1,0 +1,91 @@
+{
+  "schema": "myprime.provider-profile.synthetic.v1",
+  "research_only": true,
+  "provider_profile_id": "amazon-creators-api-au-v1",
+  "field_policies": {
+    "asin": "ALLOWED_CURRENT",
+    "title": "ALLOWED_CURRENT",
+    "parent_asin": "ALLOWED_CURRENT",
+    "availability": "ALLOWED_WITH_EXPIRY",
+    "deal_details": "ALLOWED_WITH_EXPIRY",
+    "price": "ALLOWED_WITH_EXPIRY",
+    "image": "HOLD_RIGHTS_UNKNOWN",
+    "prime": "HOLD_UNSUPPORTED",
+    "amazon_bsr": "HOLD_UNSUPPORTED"
+  },
+  "snapshots": [
+    {
+      "snapshot_id": "snap-001",
+      "provider_version": 1,
+      "checked_at": "2026-09-15T00:00:00Z",
+      "marketplace": "www.amazon.com.au",
+      "x_marketplace": "www.amazon.com.au",
+      "asin": "B0ABCDEF12",
+      "title": "Synthetic AU Product",
+      "parent_asin": "B0PARENT12",
+      "deal_details": {"present": true},
+      "availability": {"type": "IN_STOCK"},
+      "price": {"amount": 49.99, "currency": "AUD"},
+      "expected_disposition": "ACCEPT"
+    },
+    {
+      "snapshot_id": "snap-001-replay",
+      "replay_of": "snap-001",
+      "provider_version": 1,
+      "checked_at": "2026-09-15T00:00:00Z",
+      "marketplace": "www.amazon.com.au",
+      "x_marketplace": "www.amazon.com.au",
+      "asin": "B0ABCDEF12",
+      "title": "Synthetic AU Product",
+      "parent_asin": "B0PARENT12",
+      "deal_details": {"present": true},
+      "availability": {"type": "IN_STOCK"},
+      "price": {"amount": 49.99, "currency": "AUD"},
+      "expected_disposition": "IDEMPOTENT_REPLAY"
+    },
+    {
+      "snapshot_id": "snap-002",
+      "provider_version": 2,
+      "checked_at": "2026-09-15T01:00:00Z",
+      "marketplace": "www.amazon.com.au",
+      "x_marketplace": "www.amazon.com.au",
+      "asin": "B0ABCDEF12",
+      "title": "Synthetic AU Product",
+      "parent_asin": "B0PARENT12",
+      "deal_details": {"present": false},
+      "availability": {"type": "IN_STOCK"},
+      "price": {"amount": 54.99, "currency": "AUD"},
+      "expected_disposition": "ACCEPT"
+    },
+    {
+      "snapshot_id": "snap-old-after-new",
+      "provider_version": 1,
+      "checked_at": "2026-09-14T23:00:00Z",
+      "marketplace": "www.amazon.com.au",
+      "x_marketplace": "www.amazon.com.au",
+      "asin": "B0ABCDEF12",
+      "title": "Synthetic AU Product",
+      "expected_disposition": "STALE_VERSION_REJECTED"
+    },
+    {
+      "snapshot_id": "snap-marketplace-mismatch",
+      "provider_version": 3,
+      "checked_at": "2026-09-15T02:00:00Z",
+      "marketplace": "www.amazon.com.au",
+      "x_marketplace": "www.amazon.com",
+      "asin": "B0ABCDEF12",
+      "title": "Synthetic AU Product",
+      "expected_disposition": "MARKETPLACE_MISMATCH"
+    },
+    {
+      "snapshot_id": "snap-same-version-conflict",
+      "provider_version": 2,
+      "checked_at": "2026-09-15T01:00:00Z",
+      "marketplace": "www.amazon.com.au",
+      "x_marketplace": "www.amazon.com.au",
+      "asin": "B0ABCDEF12",
+      "title": "Conflicting Synthetic Product",
+      "expected_disposition": "VERSION_CONFLICT"
+    }
+  ]
+}
