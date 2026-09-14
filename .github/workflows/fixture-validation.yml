@@ -44,6 +44,8 @@ jobs:
         run: python fixtures/candidates/validate_candidate_research.py fixtures/candidates/research-tranche-009.json
       - name: Analyze cross-tranche product identity and dedupe
         run: python fixtures/candidates/analyze_candidate_collection.py fixtures/candidates/first-100-research.json fixtures/candidates/research-tranche-004.json fixtures/candidates/research-tranche-005.json fixtures/candidates/research-tranche-009.json
+      - name: Report fail-closed qualification funnel
+        run: python fixtures/candidates/qualification_funnel.py fixtures/candidates/first-100-research.json fixtures/candidates/research-tranche-004.json fixtures/candidates/research-tranche-005.json fixtures/candidates/research-tranche-009.json
       - name: Run candidate research and identity assurance tests
         run: python -m unittest discover -s fixtures/candidates -p 'test_*.py'
       - name: Validate provisional synthetic ranking
