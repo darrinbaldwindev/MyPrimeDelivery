@@ -22,3 +22,5 @@ jobs:
           python-version: '3.12'
       - name: Validate M-03 synthetic fixture
         run: python fixtures/m03/validate_fixture.py fixtures/m03/prime-discovery.synthetic.json
+      - name: Run fail-closed fixture tests
+        run: python -m unittest fixtures/m03/test_validate_fixture.py
