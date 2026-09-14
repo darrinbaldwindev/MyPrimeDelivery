@@ -14,27 +14,52 @@ def _ranking_position(product):
     return value
 
 
+def _require_unique(products, field):
+    values = [product.get(field) for product in products]
+    if any(not isinstance(value, str) or not value.strip() for value in values):
+        raise ValueError(f"missing or invalid {field}")
+    if len(values) != len(set(values)):
+        raise ValueError(f"duplicate {field}")
+
+
 def project_render_model(data):
     if data.get("fixture_only") is not True:
         raise ValueError("synthetic renderer requires fixture_only=true")
 
     category = data["category"]
+    products_input = data["products"]
+    _require_unique(products_input, "product_id")
+    _require_unique(products_input, "asin")
+
+    category_id = category.get("category_id")
+    ranking_method_id = category.get("ranking_method_id")
+    if not category_id or not ranking_method_id:
+        raise ValueError("category identity/ranking method is incomplete")
+
     category_freshness = category["freshness_state"]
     category_current = (
         category_freshness not in NON_CURRENT_STATES
         and category.get("evidence_status") in CURRENT_EVIDENCE_STATUSES
     )
 
-    positions = [_ranking_position(product) for product in data["products"]]
+    positions = [_ranking_position(product) for product in products_input]
     if len(positions) != len(set(positions)):
         raise ValueError("duplicate ranking_position")
 
     products = []
-    for product in sorted(data["products"], key=_ranking_position):
+    for product in sorted(products_input, key=_ranking_position):
+        if product.get("category_id") != category_id:
+            raise ValueError(f"{product.get('asin')}: category_id mismatch")
+        if product.get("ranking_method_id") != ranking_method_id:
+            raise ValueError(f"{product.get('asin')}: ranking_method_id mismatch")
+
         destination_state = product["outbound_destination_state"]
         freshness_state = product["freshness_state"]
         evidence_status = product.get("evidence_status")
-        evidence_current = freshness_state not in NON_CURRENT_STATES
+        evidence_current = (
+            freshness_state not in NON_CURRENT_STATES
+            and evidence_status in CURRENT_EVIDENCE_STATUSES
+        )
         fixture_disclosure = True
         products.append({
             "component": "mpd-product-card",
@@ -62,7 +87,7 @@ def project_render_model(data):
         })
     return {
         "component": "mpd-category-view",
-        "category_id": category["category_id"],
+        "category_id": category_id,
         "category_name": category["name"],
         "marketplace": category["marketplace"],
         "ranking_evidence_badge": category_freshness,
