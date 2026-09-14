@@ -1,0 +1,13 @@
+{
+  "schema": "myprime.ranking.synthetic.v1",
+  "ranking_method_id": "provisional-v1",
+  "research_only": true,
+  "products": [
+    {"product_id":"prod-a","identity_state":"ASIN_VERIFIED","marketplace":"AU","prime_state":"VERIFIED","selection_strength":34,"evidence_confidence":23,"freshness_strength":20,"deal_relevance":0,"editorial_utility":4,"freshness_state":"CURRENT","eligible":true},
+    {"product_id":"prod-b","identity_state":"ASIN_VERIFIED","marketplace":"AU","prime_state":"VERIFIED","selection_strength":30,"evidence_confidence":24,"freshness_strength":20,"deal_relevance":8,"editorial_utility":3,"freshness_state":"CURRENT","eligible":true},
+    {"product_id":"prod-c","identity_state":"TITLE_ONLY","marketplace":"AU","prime_state":"UNKNOWN","selection_strength":40,"evidence_confidence":25,"freshness_strength":20,"deal_relevance":10,"editorial_utility":5,"freshness_state":"CURRENT","eligible":false},
+    {"product_id":"prod-d","identity_state":"ASIN_VERIFIED","marketplace":"AU","prime_state":"VERIFIED","selection_strength":36,"evidence_confidence":24,"freshness_strength":0,"deal_relevance":10,"editorial_utility":5,"freshness_state":"STALE","eligible":false},
+    {"product_id":"prod-e","identity_state":"ASIN_VERIFIED","marketplace":"AU","prime_state":"VERIFIED","selection_strength":34,"evidence_confidence":23,"freshness_strength":20,"deal_relevance":0,"editorial_utility":4,"freshness_state":"CURRENT","eligible":true}
+  ],
+  "expected_order": ["prod-b", "prod-a", "prod-e"]
+}
