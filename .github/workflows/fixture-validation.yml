@@ -1,0 +1,24 @@
+name: Fixture validation
+
+on:
+  push:
+    branches:
+      - agent/overseer/initial-project-timeline
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-m03-fixture:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate M-03 synthetic fixture
+        run: python fixtures/m03/validate_fixture.py fixtures/m03/prime-discovery.synthetic.json
