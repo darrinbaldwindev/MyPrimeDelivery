@@ -46,6 +46,13 @@ class RenderFixtureTests(unittest.TestCase):
             model = project_render_model(data)
             self.assertTrue(all(not p["show_ranking"] for p in model["products"]))
 
+    def test_category_evidence_status_contradiction_suppresses_ranking(self):
+        data = copy.deepcopy(BASE)
+        data["category"]["freshness_state"] = "CURRENT"
+        data["category"]["evidence_status"] = "UNKNOWN"
+        model = project_render_model(data)
+        self.assertTrue(all(not p["show_ranking"] for p in model["products"]))
+
     def test_missing_ranking_evidence_suppresses_ranking(self):
         data = copy.deepcopy(BASE)
         data["products"][0]["ranking_evidence_source"] = ""
@@ -59,10 +66,26 @@ class RenderFixtureTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 project_render_model(data)
 
+    def test_duplicate_ranking_positions_fail_closed(self):
+        data = copy.deepcopy(BASE)
+        data["products"][1]["ranking_position"] = data["products"][0]["ranking_position"]
+        with self.assertRaisesRegex(ValueError, "duplicate ranking_position"):
+            project_render_model(data)
+
     def test_verified_destination_without_url_suppresses_cta(self):
         data = copy.deepcopy(BASE)
         data["products"][0]["outbound_destination_state"] = "VERIFIED"
+        data["products"][0]["evidence_status"] = "VERIFIED"
         data["products"][0]["outbound_url"] = None
+        model = project_render_model(data)
+        self.assertFalse(model["products"][0]["show_outbound_cta"])
+
+    def test_verified_destination_requires_verified_evidence_status(self):
+        data = copy.deepcopy(BASE)
+        data["products"][0]["outbound_destination_state"] = "VERIFIED"
+        data["products"][0]["outbound_url"] = "https://example.invalid/fixture-only"
+        data["products"][0]["freshness_state"] = "CURRENT"
+        data["products"][0]["evidence_status"] = "FIXTURE"
         model = project_render_model(data)
         self.assertFalse(model["products"][0]["show_outbound_cta"])
 
@@ -70,10 +93,18 @@ class RenderFixtureTests(unittest.TestCase):
         for state in ("STALE", "BLOCKED"):
             data = copy.deepcopy(BASE)
             data["products"][0]["outbound_destination_state"] = "VERIFIED"
+            data["products"][0]["evidence_status"] = "VERIFIED"
             data["products"][0]["outbound_url"] = "https://example.invalid/fixture-only"
             data["products"][0]["freshness_state"] = state
             model = project_render_model(data)
             self.assertFalse(model["products"][0]["show_outbound_cta"])
+
+    def test_fixture_disclosure_is_mandatory(self):
+        for bad in (False, None):
+            data = copy.deepcopy(BASE)
+            data["fixture_only"] = bad
+            with self.assertRaisesRegex(ValueError, "fixture_only=true"):
+                project_render_model(data)
 
     def test_optional_commercial_input_is_not_projected(self):
         data = copy.deepcopy(BASE)
