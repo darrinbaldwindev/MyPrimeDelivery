@@ -1,0 +1,73 @@
+{
+  "schema": "myprime.provider-evidence.synthetic.v1",
+  "research_only": true,
+  "cases": [
+    {
+      "case_id": "accept-current-product",
+      "record": {
+        "provider_id": "SYNTHETIC-OFFICIAL-PROVIDER",
+        "provider_authority": "PROVEN",
+        "rights_to_use": "PROVEN",
+        "evidence_id": "EV-PROVIDER-001",
+        "marketplace": "AU",
+        "asin": "B0SYN00001",
+        "canonical_title": "Synthetic Product One",
+        "checked_at": "2026-09-14T13:00:00Z",
+        "freshness_state": "CURRENT",
+        "identity": {"marketplace":"AU","asin":"B0SYN00001","product_kind":"PRODUCT","parent_asin":null,"variant_key":null},
+        "prime": {"state":"VERIFIED","evidence_id":"EV-PRIME-001","checked_at":"2026-09-14T13:00:00Z"},
+        "selection": {"state":"VERIFIED","method_id":"provider-category-position-v1","position":4,"evidence_id":"EV-RANK-001","checked_at":"2026-09-14T12:59:00Z"},
+        "deal": {"state":"ACTIVE","evidence_id":"EV-DEAL-001","checked_at":"2026-09-14T12:58:00Z","ends_at":"2026-09-15T00:00:00Z"},
+        "publication_authority": false,
+        "network_io": false
+      },
+      "expected_disposition": "EVIDENCE_ACCEPTABLE",
+      "expected_reason": "NORMALIZED_PROVIDER_EVIDENCE"
+    },
+    {
+      "case_id": "hold-asin-mismatch",
+      "record": {
+        "provider_id":"SYNTHETIC-OFFICIAL-PROVIDER","provider_authority":"PROVEN","rights_to_use":"PROVEN","evidence_id":"EV-2","marketplace":"AU","asin":"B0SYN00002","canonical_title":"Mismatch","checked_at":"2026-09-14T13:00:00Z","freshness_state":"CURRENT",
+        "identity":{"marketplace":"AU","asin":"B0SYN99999","product_kind":"PRODUCT","parent_asin":null,"variant_key":null},
+        "publication_authority":false,"network_io":false
+      },
+      "expected_disposition":"HOLD","expected_reason":"ASIN_MISMATCH"
+    },
+    {
+      "case_id": "hold-marketplace-mismatch",
+      "record": {
+        "provider_id":"SYNTHETIC-OFFICIAL-PROVIDER","provider_authority":"PROVEN","rights_to_use":"PROVEN","evidence_id":"EV-3","marketplace":"AU","asin":"B0SYN00003","canonical_title":"Mismatch","checked_at":"2026-09-14T13:00:00Z","freshness_state":"CURRENT",
+        "identity":{"marketplace":"US","asin":"B0SYN00003","product_kind":"PRODUCT","parent_asin":null,"variant_key":null},
+        "publication_authority":false,"network_io":false
+      },
+      "expected_disposition":"HOLD","expected_reason":"MARKETPLACE_MISMATCH"
+    },
+    {
+      "case_id": "hold-stale-provider",
+      "record": {
+        "provider_id":"SYNTHETIC-OFFICIAL-PROVIDER","provider_authority":"PROVEN","rights_to_use":"PROVEN","evidence_id":"EV-4","marketplace":"AU","asin":"B0SYN00004","canonical_title":"Stale","checked_at":"2026-09-14T10:00:00Z","freshness_state":"STALE",
+        "identity":{"marketplace":"AU","asin":"B0SYN00004","product_kind":"PRODUCT","parent_asin":null,"variant_key":null},
+        "publication_authority":false,"network_io":false
+      },
+      "expected_disposition":"HOLD","expected_reason":"PROVIDER_EVIDENCE_NOT_CURRENT"
+    },
+    {
+      "case_id": "hold-variant-conflict",
+      "record": {
+        "provider_id":"SYNTHETIC-OFFICIAL-PROVIDER","provider_authority":"PROVEN","rights_to_use":"PROVEN","evidence_id":"EV-5","marketplace":"AU","asin":"B0SYN00005","canonical_title":"Variant conflict","checked_at":"2026-09-14T13:00:00Z","freshness_state":"CURRENT",
+        "identity":{"marketplace":"AU","asin":"B0SYN00005","product_kind":"VARIANT","parent_asin":null,"variant_key":"SIZE-L"},
+        "publication_authority":false,"network_io":false
+      },
+      "expected_disposition":"HOLD","expected_reason":"VARIANT_IDENTITY_INCOMPLETE"
+    },
+    {
+      "case_id": "hold-unproven-authority",
+      "record": {
+        "provider_id":"SYNTHETIC-PROVIDER","provider_authority":"UNKNOWN","rights_to_use":"PROVEN","evidence_id":"EV-6","marketplace":"AU","asin":"B0SYN00006","canonical_title":"Authority unknown","checked_at":"2026-09-14T13:00:00Z","freshness_state":"CURRENT",
+        "identity":{"marketplace":"AU","asin":"B0SYN00006","product_kind":"PRODUCT","parent_asin":null,"variant_key":null},
+        "publication_authority":false,"network_io":false
+      },
+      "expected_disposition":"HOLD","expected_reason":"PROVIDER_AUTHORITY_UNPROVEN"
+    }
+  ]
+}
