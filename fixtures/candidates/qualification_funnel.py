@@ -53,12 +53,22 @@ def analyze_funnel(paths: list[Path]) -> dict:
     gate_counts = Counter()
     blocked_by = Counter()
     qualified = []
+    identity_conflicts = []
     for key, observations in by_title.items():
         # Gate coverage can be reported across observations, but qualification
         # requires one coherent observation carrying every gate. Independent
         # observations remain uncorrelated until authoritative identity evidence
         # proves they describe the same exact product.
         observation_gates = [_observation_gates(record) for record in observations]
+        known_asins = {
+            str(record.get("asin")).strip().upper()
+            for record in observations
+            if _known(record.get("asin"))
+        }
+        identity_conflict = len(known_asins) > 1
+        if identity_conflict:
+            identity_conflicts.append(key)
+
         gates = {
             gate: any(item[gate] for item in observation_gates)
             for gate in QUALIFICATION_GATES
@@ -68,7 +78,7 @@ def analyze_funnel(paths: list[Path]) -> dict:
                 gate_counts[gate] += 1
             else:
                 blocked_by[gate] += 1
-        if any(all(item.values()) for item in observation_gates):
+        if not identity_conflict and any(all(item.values()) for item in observation_gates):
             qualified.append(key)
 
     return {
@@ -76,8 +86,9 @@ def analyze_funnel(paths: list[Path]) -> dict:
         "distinct_concepts": len(by_title),
         "gate_pass_counts": {gate: gate_counts[gate] for gate in QUALIFICATION_GATES},
         "gate_blocked_counts": {gate: blocked_by[gate] for gate in QUALIFICATION_GATES},
+        "identity_conflict_concepts": len(identity_conflicts),
         "qualified_concepts": len(qualified),
-        "qualification_note": "Research breadth is not qualification. UNKNOWN or historical/editorial evidence fails closed; independent observations cannot combine to establish a qualified product or publication authority.",
+        "qualification_note": "Research breadth is not qualification. UNKNOWN or historical/editorial evidence fails closed; independent observations cannot combine, and conflicting known ASIN identities cannot establish a qualified product or publication authority.",
         "publication_authority": False,
         "network_io": False,
     }
