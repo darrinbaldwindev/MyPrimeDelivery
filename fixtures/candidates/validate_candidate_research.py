@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -74,8 +75,42 @@ def validate(path: Path) -> Counter:
     return counts
 
 
+def _candidate_number(candidate_id: str) -> int:
+    match = re.fullmatch(r"cand-(\d+)", candidate_id or "")
+    if not match:
+        fail(f"{candidate_id}: candidate_id must use cand-NNN form")
+    return int(match.group(1))
+
+
+def validate_collection(paths: list[Path]) -> Counter:
+    global_seen = set()
+    cumulative = Counter()
+    ordered_ids = []
+    for path in paths:
+        cumulative.update(validate(path))
+        data = json.loads(path.read_text(encoding="utf-8"))
+        for record in data["candidates"]:
+            cid = record["candidate_id"]
+            if cid in global_seen:
+                fail(f"{cid}: duplicate candidate_id across research tranches")
+            global_seen.add(cid)
+            ordered_ids.append(cid)
+
+    numeric = [_candidate_number(cid) for cid in ordered_ids]
+    if numeric != sorted(numeric) or len(numeric) != len(set(numeric)):
+        fail("candidate ordering must be deterministic and globally increasing")
+    missing = ALLOWED_CATEGORIES.difference(cumulative)
+    if missing:
+        fail("cumulative dataset missing launch categories: " + ", ".join(sorted(missing)))
+    return cumulative
+
+
 if __name__ == "__main__":
-    target = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).with_name("first-100-research.json")
-    counts = validate(target)
-    print(f"PASS: {target} candidate research dataset is fail-closed")
+    targets = [Path(arg) for arg in sys.argv[1:]] or [Path(__file__).with_name("first-100-research.json")]
+    if len(targets) == 1:
+        counts = validate(targets[0])
+        print(f"PASS: {targets[0]} candidate research dataset is fail-closed")
+    else:
+        counts = validate_collection(targets)
+        print(f"PASS: {len(targets)} candidate research tranches are cross-validated fail-closed")
     print(json.dumps(dict(sorted(counts.items())), indent=2))
