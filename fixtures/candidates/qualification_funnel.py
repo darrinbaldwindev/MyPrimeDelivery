@@ -20,6 +20,17 @@ def _known(value):
     return value not in (None, "", "UNKNOWN", "UNVERIFIED", "RESEARCH_SNAPSHOT")
 
 
+def _observation_gates(record: dict) -> dict:
+    return {
+        "identity": _known(record.get("asin")),
+        "prime": record.get("prime_evidence_state") in {"VERIFIED", "CURRENT_VERIFIED"},
+        "freshness": record.get("freshness_state") in {"CURRENT", "FRESH", "VERIFIED_CURRENT"},
+        "ranking": _known(record.get("ranking_method_id")) and _known(record.get("ranking_evidence_source")),
+        "rights": record.get("source_rights_state") in {"VERIFIED", "PERMITTED"},
+        "outbound_destination": record.get("outbound_destination_state") == "VERIFIED",
+    }
+
+
 def analyze_funnel(paths: list[Path]) -> dict:
     rows = []
     seen_ids = set()
@@ -43,22 +54,21 @@ def analyze_funnel(paths: list[Path]) -> dict:
     blocked_by = Counter()
     qualified = []
     for key, observations in by_title.items():
-        # Research observations may accumulate, but a gate is satisfied only by
-        # explicit evidence on at least one observation. Unknowns never promote.
+        # Gate coverage can be reported across observations, but qualification
+        # requires one coherent observation carrying every gate. Independent
+        # observations remain uncorrelated until authoritative identity evidence
+        # proves they describe the same exact product.
+        observation_gates = [_observation_gates(record) for record in observations]
         gates = {
-            "identity": any(_known(r.get("asin")) for r in observations),
-            "prime": any(r.get("prime_evidence_state") in {"VERIFIED", "CURRENT_VERIFIED"} for r in observations),
-            "freshness": any(r.get("freshness_state") in {"CURRENT", "FRESH", "VERIFIED_CURRENT"} for r in observations),
-            "ranking": any(_known(r.get("ranking_method_id")) and _known(r.get("ranking_evidence_source")) for r in observations),
-            "rights": any(r.get("source_rights_state") in {"VERIFIED", "PERMITTED"} for r in observations),
-            "outbound_destination": any(r.get("outbound_destination_state") == "VERIFIED" for r in observations),
+            gate: any(item[gate] for item in observation_gates)
+            for gate in QUALIFICATION_GATES
         }
         for gate, passed in gates.items():
             if passed:
                 gate_counts[gate] += 1
             else:
                 blocked_by[gate] += 1
-        if all(gates.values()):
+        if any(all(item.values()) for item in observation_gates):
             qualified.append(key)
 
     return {
@@ -67,7 +77,7 @@ def analyze_funnel(paths: list[Path]) -> dict:
         "gate_pass_counts": {gate: gate_counts[gate] for gate in QUALIFICATION_GATES},
         "gate_blocked_counts": {gate: blocked_by[gate] for gate in QUALIFICATION_GATES},
         "qualified_concepts": len(qualified),
-        "qualification_note": "Research breadth is not qualification. UNKNOWN or historical/editorial evidence fails closed and cannot establish Prime/rank/rights/publication authority.",
+        "qualification_note": "Research breadth is not qualification. UNKNOWN or historical/editorial evidence fails closed; independent observations cannot combine to establish a qualified product or publication authority.",
         "publication_authority": False,
         "network_io": False,
     }
