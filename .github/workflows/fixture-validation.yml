@@ -40,7 +40,13 @@ jobs:
         run: python fixtures/candidates/validate_candidate_research.py fixtures/candidates/research-tranche-004.json
       - name: Validate Batch 005 candidate research tranche
         run: python fixtures/candidates/validate_candidate_research.py fixtures/candidates/research-tranche-005.json
-      - name: Run candidate research negative assurance tests
+      - name: Analyze cross-tranche product identity and dedupe
+        run: python fixtures/candidates/analyze_candidate_collection.py fixtures/candidates/first-100-research.json fixtures/candidates/research-tranche-004.json fixtures/candidates/research-tranche-005.json
+      - name: Run candidate research and identity assurance tests
         run: python -m unittest discover -s fixtures/candidates -p 'test_*.py'
+      - name: Validate provisional synthetic ranking
+        run: python fixtures/ranking/validate_provisional_ranking.py fixtures/ranking/provisional-ranking.synthetic.json
+      - name: Run provisional ranking assurance tests
+        run: python -m unittest discover -s fixtures/ranking -p 'test_*.py'
       - name: Run source rights and provider authority tests
         run: python -m unittest discover -s fixtures/source_rights -p 'test_*.py'
