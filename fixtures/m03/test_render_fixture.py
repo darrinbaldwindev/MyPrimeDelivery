@@ -14,6 +14,7 @@ class RenderFixtureTests(unittest.TestCase):
     def test_fixture_renders_three_products_without_positive_prime_claims(self):
         model = project_render_model(copy.deepcopy(BASE))
         self.assertEqual(len(model["products"]), 3)
+        self.assertEqual(model["inventory_state"], "POPULATED")
         self.assertTrue(model["fixture_disclosure"])
         self.assertTrue(all(p["fixture_disclosure"] for p in model["products"]))
         self.assertTrue(all(not p["show_prime_positive_claim"] for p in model["products"]))
@@ -90,6 +91,39 @@ class RenderFixtureTests(unittest.TestCase):
         data["products"][0]["ranking_method_id"] = "OTHER-RANKING"
         with self.assertRaisesRegex(ValueError, "ranking_method_id mismatch"):
             project_render_model(data)
+
+    def test_marketplace_mismatch_fails_closed(self):
+        data = copy.deepcopy(BASE)
+        data["products"][0]["marketplace"] = "AU"
+        with self.assertRaisesRegex(ValueError, "marketplace mismatch"):
+            project_render_model(data)
+
+    def test_ranking_source_method_identity_mismatch_fails_closed(self):
+        data = copy.deepcopy(BASE)
+        data["products"][0]["ranking_evidence_source"] = "different-source"
+        with self.assertRaisesRegex(ValueError, "ranking evidence source/method identity mismatch"):
+            project_render_model(data)
+
+    def test_missing_category_identity_fields_fail_closed(self):
+        for field in ("category_id", "ranking_method_id", "marketplace"):
+            data = copy.deepcopy(BASE)
+            data["category"][field] = ""
+            with self.assertRaisesRegex(ValueError, "category identity/ranking method/marketplace is incomplete"):
+                project_render_model(data)
+
+    def test_ranking_method_record_must_match_category(self):
+        data = copy.deepcopy(BASE)
+        data["ranking_method"]["ranking_method_id"] = "OTHER-RANKING"
+        with self.assertRaisesRegex(ValueError, "ranking method identity mismatch"):
+            project_render_model(data)
+
+    def test_empty_product_batch_is_explicit_and_non_positive(self):
+        data = copy.deepcopy(BASE)
+        data["products"] = []
+        model = project_render_model(data)
+        self.assertEqual(model["inventory_state"], "EMPTY")
+        self.assertEqual(model["products"], [])
+        self.assertTrue(model["fixture_disclosure"])
 
     def test_product_evidence_contradiction_suppresses_all_positive_presentation(self):
         data = copy.deepcopy(BASE)
