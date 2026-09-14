@@ -6,13 +6,23 @@ from pathlib import Path
 NON_CURRENT_STATES = {"STALE", "UNKNOWN", "BLOCKED"}
 
 
+def _ranking_position(product):
+    value = product.get("ranking_position")
+    if not isinstance(value, int) or value < 1:
+        raise ValueError(f"{product.get('asin', '<unknown>')}: invalid ranking_position")
+    return value
+
+
 def project_render_model(data):
     category = data["category"]
+    category_freshness = category["freshness_state"]
+    category_current = category_freshness not in NON_CURRENT_STATES
     products = []
-    for product in sorted(data["products"], key=lambda p: p["ranking_position"]):
+    for product in sorted(data["products"], key=_ranking_position):
         destination_state = product["outbound_destination_state"]
         freshness_state = product["freshness_state"]
         evidence_current = freshness_state not in NON_CURRENT_STATES
+        fixture_disclosure = bool(data.get("fixture_only"))
         products.append({
             "component": "mpd-product-card",
             "product_id": product["product_id"],
@@ -21,12 +31,13 @@ def project_render_model(data):
             "prime_state": product["prime_state"],
             "ranking_position": product["ranking_position"],
             "evidence_badge": freshness_state,
+            "fixture_disclosure": fixture_disclosure,
             "show_prime_positive_claim": (
                 product["prime_state"] == "VERIFIED"
                 and product["evidence_status"] == "VERIFIED"
                 and freshness_state == "CURRENT"
             ),
-            "show_ranking": bool(product.get("ranking_evidence_source")) and evidence_current,
+            "show_ranking": bool(product.get("ranking_evidence_source")) and evidence_current and category_current,
             "show_outbound_cta": destination_state == "VERIFIED" and bool(product.get("outbound_url")) and evidence_current,
             "show_local_checkout": False,
             "commercial_fields": {},
@@ -36,7 +47,8 @@ def project_render_model(data):
         "category_id": category["category_id"],
         "category_name": category["name"],
         "marketplace": category["marketplace"],
-        "ranking_evidence_badge": category["freshness_state"],
+        "ranking_evidence_badge": category_freshness,
+        "fixture_disclosure": bool(data.get("fixture_only")),
         "products": products,
     }
 
