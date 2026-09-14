@@ -5,9 +5,9 @@ Status: ACTIVE / NON-PRODUCTION SLICE READY; LIVE AMAZON INTEGRATION BLOCKED
 
 ## Current result
 
-MyPrimeDelivery is no longer blocked on basic product identity or on creating a synthetic non-production vertical slice.
+MyPrimeDelivery is no longer blocked on basic product identity or on creating synthetic non-production discovery/deal slices.
 
-Owner direction now establishes the product as an Amazon-focused product/category discovery site for top products/categories eligible for Prime delivery, using WordPress as the site platform. The repository has a bounded WordPress data model, synthetic fixture, renderer/validator code, fail-closed tests, and a fixture-validation workflow.
+Owner direction establishes the product as an Amazon-focused product/category discovery site for top products/categories eligible for Prime delivery, using WordPress as the site platform. The repository now has a bounded WordPress data model, synthetic product/category fixture, executable time-sensitive deal fixture, renderer/validator code, fail-closed tests, and a fixture-validation workflow.
 
 Live Amazon-backed product publication remains blocked until marketplace, ranking, data-provider, Prime/deal evidence, affiliate/compliance and freshness decisions are authorised.
 
@@ -20,11 +20,13 @@ Live Amazon-backed product publication remains blocked until marketplace, rankin
 | Discovery operating model | Catalogue/outbound-referral; no local checkout | PASS |
 | First user journey | Homepage -> category -> ranked list -> detail -> governed outbound CTA | PASS for synthetic slice |
 | Launch taxonomy | `docs/WORDPRESS-CATEGORY-TAXONOMY.md` | PASS for planning |
-| Synthetic data model | `docs/M03-WORDPRESS-DATA-MODEL-AND-FIRST-SLICE.md` + fixture | PASS |
-| Fail-closed validation | `fixtures/m03/validate_fixture.py` + unit tests | PASS in repository design |
-| Synthetic rendering contract | renderer + render tests | PASS in repository design |
-| CI validation workflow | `.github/workflows/fixture-validation.yml` | PRESENT; exact run evidence must be checked per head |
-| Deal/time-sensitive evidence model | `docs/DEAL-OFFER-EVIDENCE-CONTRACT.md` | PASS for non-production contract |
+| Synthetic product data model | `docs/M03-WORDPRESS-DATA-MODEL-AND-FIRST-SLICE.md` + fixture | PASS |
+| Product fail-closed validation | `fixtures/m03/validate_fixture.py` + unit tests | PASS |
+| Product synthetic rendering | `fixtures/m03/render_fixture.py` + render tests | PASS |
+| Deal/time-sensitive evidence contract | `docs/DEAL-OFFER-EVIDENCE-CONTRACT.md` | PASS for non-production contract |
+| Executable deal-state validation | `fixtures/deals/validate_deal_fixture.py` + tests | PASS |
+| Deal public fail-closed projection | `fixtures/deals/render_deal_fixture.py` + tests | PASS |
+| CI validation workflow | `.github/workflows/fixture-validation.yml`; run `34800367149` on `2fe35543b879b1707e58e59eab6e47af512a5b7f` | PASS / SUCCESS |
 | Candidate qualification pipeline | `docs/PRODUCT-CANDIDATE-QUALIFICATION-PIPELINE.md` | PASS for research/intake contract |
 | Target marketplace | Owner has discussed Amazon Australia candidates, but canonical marketplace decision is not yet promoted | OPEN |
 | Definition of `top` / ranking method | Not yet owner/authoritatively selected | BLOCKED for live claims |
