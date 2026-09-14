@@ -37,6 +37,42 @@ class RenderFixtureTests(unittest.TestCase):
         self.assertEqual(first["evidence_badge"], "STALE")
         self.assertFalse(first["show_prime_positive_claim"])
 
+    def test_missing_ranking_evidence_suppresses_ranking(self):
+        data = copy.deepcopy(BASE)
+        data["products"][0]["ranking_evidence_source"] = ""
+        model = project_render_model(data)
+        first = model["products"][0]
+        self.assertFalse(first["show_ranking"])
+
+    def test_verified_destination_without_url_suppresses_cta(self):
+        data = copy.deepcopy(BASE)
+        data["products"][0]["outbound_destination_state"] = "VERIFIED"
+        data["products"][0]["outbound_url"] = None
+        model = project_render_model(data)
+        first = model["products"][0]
+        self.assertFalse(first["show_outbound_cta"])
+
+    def test_optional_commercial_input_is_not_projected(self):
+        data = copy.deepcopy(BASE)
+        data["products"][0]["price"] = "999.99"
+        data["products"][0]["stock"] = 999
+        data["products"][0]["affiliate_tag"] = "fixture-only-tag"
+        model = project_render_model(data)
+        first = model["products"][0]
+        self.assertEqual(first["commercial_fields"], {})
+        self.assertNotIn("price", first)
+        self.assertNotIn("stock", first)
+        self.assertNotIn("affiliate_tag", first)
+
+    def test_evidence_badge_maps_freshness_state_verbatim(self):
+        data = copy.deepcopy(BASE)
+        expected = ["CURRENT", "STALE", "UNKNOWN"]
+        for product, state in zip(data["products"], expected):
+            product["freshness_state"] = state
+        model = project_render_model(data)
+        badges = [product["evidence_badge"] for product in model["products"]]
+        self.assertEqual(badges, expected)
+
 
 if __name__ == "__main__":
     unittest.main()
