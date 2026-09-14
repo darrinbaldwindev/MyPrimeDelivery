@@ -3,11 +3,16 @@ import json
 from pathlib import Path
 
 
+NON_CURRENT_STATES = {"STALE", "UNKNOWN", "BLOCKED"}
+
+
 def project_render_model(data):
     category = data["category"]
     products = []
     for product in sorted(data["products"], key=lambda p: p["ranking_position"]):
         destination_state = product["outbound_destination_state"]
+        freshness_state = product["freshness_state"]
+        evidence_current = freshness_state not in NON_CURRENT_STATES
         products.append({
             "component": "mpd-product-card",
             "product_id": product["product_id"],
@@ -15,10 +20,14 @@ def project_render_model(data):
             "title": product["title"],
             "prime_state": product["prime_state"],
             "ranking_position": product["ranking_position"],
-            "evidence_badge": product["freshness_state"],
-            "show_prime_positive_claim": product["prime_state"] == "VERIFIED" and product["evidence_status"] == "VERIFIED",
-            "show_ranking": bool(product.get("ranking_evidence_source")),
-            "show_outbound_cta": destination_state == "VERIFIED" and bool(product.get("outbound_url")),
+            "evidence_badge": freshness_state,
+            "show_prime_positive_claim": (
+                product["prime_state"] == "VERIFIED"
+                and product["evidence_status"] == "VERIFIED"
+                and freshness_state == "CURRENT"
+            ),
+            "show_ranking": bool(product.get("ranking_evidence_source")) and evidence_current,
+            "show_outbound_cta": destination_state == "VERIFIED" and bool(product.get("outbound_url")) and evidence_current,
             "show_local_checkout": False,
             "commercial_fields": {},
         })
