@@ -8,7 +8,8 @@ from pathlib import Path
 
 
 def normalize_title(value: str) -> str:
-    text = unicodedata.normalize("NFKD", value or "").encode("ascii", "ignore").decode("ascii")
+    text = (value or "").replace("™", " ").replace("®", " ").replace("©", " ")
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
     text = text.lower().replace("&", " and ")
     text = re.sub(r"[^a-z0-9]+", " ", text)
     return re.sub(r"\s+", " ", text).strip()
