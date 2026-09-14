@@ -32,6 +32,12 @@ class DealFixtureTests(unittest.TestCase):
     def test_active_without_source_is_rejected(self):
         self.assert_rejected(lambda d: d["offers"][0].update({"evidence_source": None}))
 
+    def test_active_without_checked_at_is_rejected(self):
+        self.assert_rejected(lambda d: d["offers"][0].update({"checked_at": None}))
+
+    def test_future_checked_at_is_rejected(self):
+        self.assert_rejected(lambda d: d["offers"][0].update({"checked_at": "2026-09-15T00:00:00Z"}))
+
     def test_expired_offer_cannot_remain_active(self):
         self.assert_rejected(lambda d: d["offers"][0].update({"expires_at": "2026-09-13T23:59:00Z"}))
 
