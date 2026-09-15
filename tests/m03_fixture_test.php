@@ -58,6 +58,23 @@ $liveIdentifier = $fixtures[0];
 $liveIdentifier['asin'] = 'B000REAL123';
 expect_invalid($liveIdentifier, 'live ASIN must be forbidden in synthetic fixture');
 
+$liveOutbound = $fixtures[0];
+$liveOutbound['outbound_url'] = 'https://www.amazon.com.au/dp/B000REAL123';
+expect_invalid($liveOutbound, 'live outbound destination must be forbidden in synthetic fixture');
+
+$wrongMarketplace = $fixtures[0];
+$wrongMarketplace['marketplace'] = 'amazon.com.au';
+expect_invalid($wrongMarketplace, 'fixture marketplace must not be promoted to live marketplace authority');
+
+$stalePositive = $fixtures[0];
+$stalePositive['evidence_state'] = 'STALE';
+$stalePositiveHtml = mpd_render_fixture($stalePositive);
+check(!str_contains($stalePositiveHtml, 'Fixture Prime state: ELIGIBLE') && !str_contains($stalePositiveHtml, 'Fixture rank:'), 'STALE evidence must suppress positive Prime/rank claims');
+
+$unknownRank = $fixtures[2];
+$unknownRank['ranking_position'] = 0;
+expect_invalid($unknownRank, 'invalid ranking identity must fail closed even when evidence is UNKNOWN');
+
 $providerSpecific = $fixtures[0];
 $providerSpecific['ranking_method'] = 'PA_API_RANK';
 expect_invalid($providerSpecific, 'provider-specific ranking method must be rejected');
@@ -67,4 +84,4 @@ foreach (['price', 'stock', 'affiliate_url', 'credential', 'customer_data', 'pay
     check(!str_contains($encoded, '"' . $forbidden . '"'), "forbidden commercial/live field present: {$forbidden}");
 }
 
-echo "PASS: 13 deterministic M-03 fixture checks\n";
+echo "PASS: 17 deterministic M-03 fixture checks\n";
